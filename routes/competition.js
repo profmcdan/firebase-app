@@ -20,6 +20,30 @@ const db = require("../config/firebaseInit");
  */
 /**
  * @swagger
+ * definitions:
+ *   Competition:
+ *     properties:
+ *       title:
+ *         type: string
+ *       location:
+ *         type: string
+ *       start_date:
+ *         type: string
+ *       end_date:
+ *         type: string
+ */
+/**
+ * @swagger
+ * definitions:
+ *   Heat:
+ *     properties:
+ *       heat_number:
+ *         type: string
+ *       competition:
+ *         type: string
+ */
+/**
+ * @swagger
  * /api/v1/competition:
  *   get:
  *     tags:
@@ -152,7 +176,7 @@ router.post("/competition", (req, res) => {
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/Competition'
+ *           $ref: '#/definitions/Heat'
  *     responses:
  *       200:
  *         description: Successfully created
@@ -220,7 +244,7 @@ router.post("/competition/:id", (req, res) => {
  *       200:
  *         description: All Heats in a Competition
  *         schema:
- *           $ref: '#/definitions/Competition'
+ *           $ref: '#/definitions/Heat'
  */
 router.get("/competition/:id/heats", (req, res) => {
 	const heats = [];
@@ -269,7 +293,7 @@ router.get("/competition/:id/heats", (req, res) => {
  *       200:
  *         description: A single heat in a Competition
  *         schema:
- *           $ref: '#/definitions/Competition'
+ *           $ref: '#/definitions/Heat'
  */
 router.get("/competition/:id/heats/:heatID", (req, res) => {
 	db
