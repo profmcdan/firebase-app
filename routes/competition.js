@@ -59,7 +59,7 @@ router.get("/competition", (req, res) => {
  * /api/competition/{id}:
  *   get:
  *     tags:
- *       - Competitions
+ *       - Competition
  *     description: Returns a single Competition
  *     produces:
  *       - application/json
