@@ -4,6 +4,35 @@ const db = require("../config/firebaseInit");
 // @desc GET Competitions
 // @route /api/v1/competition
 // @access Public
+/**
+ * @swagger
+ * definitions:
+ *   Competitions:
+ *     properties:
+ *       title:
+ *         type: string
+ *       location:
+ *         type: string
+ *       start_date:
+ *         type: string
+ *       end_date:
+ *         type: string
+ */
+/**
+ * @swagger
+ * /api/v1/competition:
+ *   get:
+ *     tags:
+ *       - Competitions
+ *     description: Returns all competitions
+ *     produces:
+ *       - application/json
+ *     responses:
+ *       200:
+ *         description: An array of competitions
+ *         schema:
+ *           $ref: '#/definitions/Competition'
+ */
 router.get("/competition", (req, res) => {
 	var query = [];
 	db
@@ -25,6 +54,27 @@ router.get("/competition", (req, res) => {
 // @desc GET a competition
 // @route /api/v1/competition/:id
 // @access Public
+/**
+ * @swagger
+ * /api/competition/{id}:
+ *   get:
+ *     tags:
+ *       - Competitions
+ *     description: Returns a single Competition
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Competition's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: A single Competition
+ *         schema:
+ *           $ref: '#/definitions/Competition'
+ */
 router.get("/competition/:id", (req, res) => {
 	db
 		.collection("competitions")
@@ -48,6 +98,26 @@ router.get("/competition/:id", (req, res) => {
 // @desc POST a competition
 // @route /api/v1/competition/
 // @access Public
+/**
+ * @swagger
+ * /api/v1/competition/:
+ *   post:
+ *     tags:
+ *       - Competition
+ *     description: Creates a new competition
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: competition
+ *         description: Competition object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Competition'
+ *     responses:
+ *       200:
+ *         description: Successfully created
+ */
 router.post("/competition", (req, res) => {
 	const newComp = {
 		title: req.body.title,
