@@ -142,7 +142,7 @@ router.post("/competition", (req, res) => {
  * /api/v1/competition/{id}:
  *   post:
  *     tags:
- *       - Competition
+ *       - Heat
  *     description: Creates a new heat in a competition
  *     produces:
  *       - application/json
@@ -206,7 +206,7 @@ router.post("/competition/:id", (req, res) => {
  * /api/competition/{id}/heats:
  *   get:
  *     tags:
- *       - Competitions
+ *       - Heat
  *     description: Returns all heats in a Competition
  *     produces:
  *       - application/json
@@ -252,10 +252,10 @@ router.get("/competition/:id/heats", (req, res) => {
 // @access Public
 /**
  * @swagger
- * /api/competition/{id}/heats/{headID}:
+ * /api/competition/{id}/heats/{heatId}:
  *   get:
  *     tags:
- *       - Competitions
+ *       - Heat
  *     description: Returns a single heat in a Competition
  *     produces:
  *       - application/json
