@@ -10,9 +10,9 @@ const app = express();
 // swagger definition
 var swaggerDefinition = {
 	info: {
-		title: "Node Swagger API",
+		title: "ZipDance API Docs",
 		version: "1.0.0",
-		description: "Documentation of the dance API with Swagger"
+		description: "Documentation of the zip-dance API with Swagger"
 	},
 	host: "https://mcdan-zip-api.herokuapp.com",
 	basePath: "/"
