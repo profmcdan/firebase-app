@@ -137,6 +137,26 @@ router.post("/competition", (req, res) => {
 // @desc POST a heat
 // @route /api/v1/competition/:compID
 // @access Public
+/**
+ * @swagger
+ * /api/v1/competition/{id}:
+ *   post:
+ *     tags:
+ *       - Competition
+ *     description: Creates a new heat in a competition
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: heat
+ *         description: heat object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Competition'
+ *     responses:
+ *       200:
+ *         description: Successfully created
+ */
 router.post("/competition/:id", (req, res) => {
 	db
 		.collection("competitions")
@@ -181,6 +201,27 @@ router.post("/competition/:id", (req, res) => {
 // @desc GET all heat in a competition
 // @route /api/v1/competition/:compID/heats
 // @access Public
+/**
+ * @swagger
+ * /api/competition/{id}/heats:
+ *   get:
+ *     tags:
+ *       - Competitions
+ *     description: Returns all heats in a Competition
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Competition's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: All Heats in a Competition
+ *         schema:
+ *           $ref: '#/definitions/Competition'
+ */
 router.get("/competition/:id/heats", (req, res) => {
 	const heats = [];
 	const compID = req.params.id;
@@ -207,8 +248,29 @@ router.get("/competition/:id/heats", (req, res) => {
 });
 
 // @desc GET a given heat in a competition
-// @route /api/v1/competition/:compID/heat/:heatID
+// @route /api/v1/competition/:compID/heats/:heatID
 // @access Public
+/**
+ * @swagger
+ * /api/competition/{id}/heats/{headID}:
+ *   get:
+ *     tags:
+ *       - Competitions
+ *     description: Returns a single heat in a Competition
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Competition's id and Heat's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: A single heat in a Competition
+ *         schema:
+ *           $ref: '#/definitions/Competition'
+ */
 router.get("/competition/:id/heats/:heatID", (req, res) => {
 	db
 		.collection("competitions")
