@@ -14,7 +14,7 @@ var swaggerDefinition = {
 		version: "1.0.0",
 		description: "Documentation of the dance API with Swagger"
 	},
-	host: "localhost:5000",
+	host: "https://mcdan-zip-api.herokuapp.com",
 	basePath: "/"
 };
 
