@@ -48,7 +48,7 @@ const db = require("../config/firebaseInit");
  * /api/v1/competition:
  *   get:
  *     tags:
- *       - Competitions
+ *       - Competition
  *     description: Returns all competitions
  *     produces:
  *       - application/json
