@@ -14,7 +14,7 @@ var swaggerDefinition = {
 		version: "1.0.0",
 		description: "Documentation of the zip-dance API with Swagger"
 	},
-	host: "https://mcdan-zip-api.herokuapp.com",
+	host: "mcdan-zip-api.herokuapp.com",
 	basePath: "/"
 };
 
