@@ -80,7 +80,7 @@ router.get("/competition", (req, res) => {
 // @access Public
 /**
  * @swagger
- * /api/competition/{id}:
+ * /api/v1/competition/{id}:
  *   get:
  *     tags:
  *       - Competition
@@ -227,7 +227,7 @@ router.post("/competition/:id", (req, res) => {
 // @access Public
 /**
  * @swagger
- * /api/competition/{id}/heats:
+ * /api/v1/competition/{id}/heats:
  *   get:
  *     tags:
  *       - Heat
@@ -276,7 +276,7 @@ router.get("/competition/:id/heats", (req, res) => {
 // @access Public
 /**
  * @swagger
- * /api/competition/{id}/heats/{heatId}:
+ * /api/v1/competition/{id}/heats/{heatId}:
  *   get:
  *     tags:
  *       - Heat
