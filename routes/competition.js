@@ -284,8 +284,8 @@ router.get("/competition/:id/heats", (req, res) => {
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: id
- *         description: Competition's id and Heat's id
+ *       - name: [id, heatID]
+ *         description: [Competition's id,  Heat's id]
  *         in: path
  *         required: true
  *         type: string
