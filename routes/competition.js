@@ -284,8 +284,13 @@ router.get("/competition/:id/heats", (req, res) => {
  *     produces:
  *       - application/json
  *     parameters:
- *       - name: [id, heatID]
- *         description: [Competition's id,  Heat's id]
+ *       - name: id
+ *         description: Competition's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: heatID
+ *         description: Heat's id
  *         in: path
  *         required: true
  *         type: string
