@@ -42,6 +42,7 @@ const db = require("../config/firebaseInit");
  *       competition:
  *         type: string
  */
+
 /**
  * @swagger
  * /api/v1/competition:
@@ -323,4 +324,171 @@ router.get("/competition/:id/heats/:heatID", (req, res) => {
 		});
 });
 
+// @desc POST a score in a given heat in a competition
+// @route /api/v1/competition/:compID/heats/:heatID/score
+// @access Public
+/**
+ * @swagger
+ * /api/v1/competition/{id}/heats/{heatID}/score:
+ *   post:
+ *     tags:
+ *       - Score
+ *     description: Creates a new score in a heat
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: score
+ *         description: score object
+ *         in: body
+ *         required: true
+ *         schema:
+ *           $ref: '#/definitions/Heat'
+ *     responses:
+ *       200:
+ *         description: Successfully created
+ */
+router.post("/competition/:id/heats/:heatID/score", (req, res) => {
+	const {
+		first_position,
+		second_position,
+		third_position,
+		fourth_position,
+		fifth_position,
+		sixth_position,
+		user
+	} = req.body;
+	const { id, heatID } = req.params;
+
+	const newScore = {
+		first_position,
+		second_position,
+		third_position,
+		fourth_position,
+		fifth_position,
+		sixth_position,
+		user
+	};
+
+	db
+		.collection("competitions")
+		.doc(id)
+		.get()
+		.then((doc) => {
+			if (!doc) {
+				return res.status(404).json({ status: "Competition does not exist", error: error });
+			}
+			// check if heat exists
+			db
+				.collection("competitions")
+				.doc(id)
+				.collection("heats")
+				.doc(heatID)
+				.get()
+				.then((doc) => {
+					if (!doc) {
+						return res.status(404).json({ status: "Heat does not exist" });
+					}
+					// post a new score
+					db
+						.collection("competitions")
+						.doc(id)
+						.collection("heats")
+						.doc(heatID)
+						.collection("scores")
+						.add(newScore)
+						.then((nData) => {
+							nData
+								.get()
+								.then((score) => {
+									const cData = score.data();
+									console.log(cData);
+									cData.id = score.id;
+									cData.competition = id;
+									cData.heat = heatID;
+									return res.send({ status: "OK", data: cData });
+								})
+								.catch((error) => {
+									return res.status(404).json({ status: "Cannot update", error: error });
+								});
+						})
+						.catch((error) => {
+							return res.status(404).json({ status: "Cannot update", error: error });
+						});
+				})
+				.catch((error) => {
+					return res.status(404).json({ status: "Cannot update", error: error });
+				});
+		})
+		.catch((error) => {
+			console.log(error);
+			return res.status(404).json({ status: "Competition does not exist", error: error });
+		});
+});
+
+// @desc GET all scores in a given heat in a competition
+// @route /api/v1/competition/:compID/heats/:heatID/score
+// @access Public
+/**
+ * @swagger
+ * /api/v1/competition/{id}/heats/{heatId}/score/{user}:
+ *   get:
+ *     tags:
+ *       - Score
+ *     description: Returns a single score for a in a Competition
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Competition's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: heatID
+ *         description: Heat's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: user
+ *         description: User's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: A score in a heat for a given user in a Competition
+ *         schema:
+ *           $ref: '#/definitions/Heat'
+ */
+router.get("/competition/:id/heats/:heatID/score/:user", (req, res) => {
+	const { id, heatID, user } = req.params;
+	var query = [];
+	db
+		.collection("competitions")
+		.doc(id)
+		.collection("heats")
+		.doc(heatID)
+		.collection("scores")
+		.where("user", "==", user)
+		.get()
+		.then((doc) => {
+			if (!doc) {
+				return res.status(404).json({ error: "Score does not exist" });
+			}
+			doc.forEach((score) => {
+				var cData = score.data();
+				cData.id = score.id;
+				cData.competition = id;
+				cData.heat = heatID;
+				query.push(cData);
+			});
+			console.log("Document data:", query);
+			if (query.length < 1) {
+				return res.status(404).json({ error: "Score does not exist" });
+			}
+			return res.send({ status: "OK", data: query });
+		})
+		.catch((err) => {
+			console.log("Error getting document", err);
+		});
+});
 module.exports = router;
