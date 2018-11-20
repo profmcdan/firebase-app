@@ -485,6 +485,40 @@ router.post("/competition/:id/heats/:heatID/score", (req, res) => {
 		sixth_position,
 		user
 	};
+	if (!user) {
+		return res.status(404).json({ errors: "User required" });
+	}
+
+	// check if user has voted.
+	const query = [];
+	db
+		.collection("competitions")
+		.doc(id)
+		.collection("heats")
+		.doc(heatID)
+		.collection("scores")
+		.where("user", "==", user)
+		.get()
+		.then((doc) => {
+			if (!doc) {
+				console.log("im here false");
+				return { status: "false" };
+			}
+			doc.forEach((score) => {
+				var cData = score.data();
+				cData.id = score.id;
+				cData.competition = id;
+				cData.heat = heatID;
+				query.push(cData);
+			});
+			console.dir({ exists: query.length });
+			if (query.length > 0) {
+				return res.status(404).json({ errors: "User has already voted" });
+			}
+		})
+		.catch((err) => {
+			return { errors: err };
+		});
 
 	db
 		.collection("competitions")
@@ -608,4 +642,38 @@ router.get("/competition/:id/heats/:heatID/score/:user", (req, res) => {
 			console.log("Error getting document", err);
 		});
 });
+
+// Check if user has voted
+const hasUserVoted = (id, heatID, user) => {
+	const query = [];
+	console.log("I got here - 2");
+	db
+		.collection("competitions")
+		.doc(id)
+		.collection("heats")
+		.doc(heatID)
+		.collection("scores")
+		.where("user", "==", user)
+		.get()
+		.then((doc) => {
+			if (!doc) {
+				console.log("im here false");
+				return { status: "false" };
+			}
+			doc.forEach((score) => {
+				var cData = score.data();
+				cData.id = score.id;
+				cData.competition = id;
+				cData.heat = heatID;
+				query.push(cData);
+			});
+			if (query.length > 0) {
+				return { status: "true" };
+			}
+			return { status: "false" };
+		})
+		.catch((err) => {
+			return { errors: err };
+		});
+};
 module.exports = router;
