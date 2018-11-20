@@ -57,6 +57,34 @@ app.get("/swagger.json", function(req, res) {
 	res.send(swaggerSpec);
 });
 
+app.get("/home", (req, res) => {
+	res.sendFile(path.join(__dirname, "public", "index.html"));
+});
+
+app.get("/about", function(req, res) {
+	res.sendFile(path.join(__dirname, "public", "about.html"));
+});
+
+app.get("/sitemap", function(req, res) {
+	res.sendFile(path.join(__dirname, "public", "sitemap.html"));
+});
+
+app.get("/competition", (req, res) => {
+	res.sendFile(path.join(__dirname, "public", "competition.html"));
+});
+
+app.get("/new", (req, res) => {
+	res.sendFile(path.join(__dirname, "public", "new.html"));
+});
+
+app.get("/manage", (req, res) => {
+	res.sendFile(path.join(__dirname, "public", "manage.html"));
+});
+
+app.get("/scores", (req, res) => {
+	res.sendFile(path.join(__dirname, "public", "scores.html"));
+});
+
 app.get("*", (req, res) => {
 	res.sendFile(path.join(__dirname, "public", "api-docs", "index.html"));
 });

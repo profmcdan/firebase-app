@@ -122,6 +122,26 @@ router.post("/images", parser.single("image"), function(req, res) {
  *       competition:
  *         type: string
  */
+/**
+ * @swagger
+ * definitions:
+ *   Score:
+ *     properties:
+ *       first_position:
+ *         type: string
+ *       second_position:
+ *         type: string
+ *       third_position:
+ *         type: string
+ *       fourth_position:
+ *         type: string
+ *       fifth_position:
+ *         type: string
+ *       sixth_position:
+ *         type: string
+ *       user:
+ *         type: string
+ */
 
 /**
  * @swagger
@@ -434,7 +454,7 @@ router.get("/competition/:id/heats/:heatID", (req, res) => {
  *         in: body
  *         required: true
  *         schema:
- *           $ref: '#/definitions/Heat'
+ *           $ref: '#/definitions/Score'
  *     responses:
  *       200:
  *         description: Successfully created
