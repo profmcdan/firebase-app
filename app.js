@@ -4,6 +4,8 @@ const morgan = require("morgan");
 const cors = require("cors");
 const swaggerJSDoc = require("swagger-jsdoc");
 const path = require("path");
+const fileUpload = require("express-fileupload");
+const formidable = require("express-formidable");
 
 const app = express();
 
@@ -39,8 +41,10 @@ app.use(
 app.use(express.static(path.join(__dirname, "public", "api-docs")));
 // Deployment Purpose
 app.use(bodyParser.json());
+// app.use(formidable());
+// app.use(fileUpload());
 //support application/x-www-form-urlencoded post data
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan("dev"));
 app.use(cors());
 

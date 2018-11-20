@@ -1,5 +1,85 @@
 const router = require("express").Router();
 const db = require("../config/firebaseInit");
+const multer = require("multer");
+const path = require("path");
+const cloudinary = require("cloudinary");
+const cloudinaryStorage = require("multer-storage-cloudinary");
+const apiKey = require("../config/keys").cloudinaryConfig;
+// setup
+cloudinary.config(apiKey);
+
+// Load Input Validation
+const validateCompetitionInput = require("../validation/competition");
+const validateHeatInput = require("../validation/heat");
+const validateScoreInput = require("../validation/scores");
+
+const upload = multer({ dest: "./assets/" });
+
+const storage = cloudinaryStorage({
+	cloudinary: cloudinary,
+	folder: "dance",
+	allowedFormats: [ "jpg", "png" ],
+	transformation: [ { width: 500, height: 500, crop: "limit" } ]
+});
+
+const parser = multer({ storage: storage });
+
+router.post("/upload2", upload.single("image"), (req, res) => {
+	console.log(req.files.image);
+	if (req.files) {
+		console.log("Uploading file...");
+		var filename = req.files.image.name;
+		var uploadStatus = "File Uploaded Successfully";
+	} else {
+		console.log("No File Uploaded");
+		var filename = "FILE NOT UPLOADED";
+		var uploadStatus = "File Upload Failed";
+	}
+
+	/* ===== Add the function to save filename to database ===== */
+
+	return res.send({ status: uploadStatus, filename: `Name Of File: ${filename}` });
+});
+
+const uploadImage = (imgPath) => {
+	cloudinary.v2.uploader.upload(imgPath, { crop: "limit", tags: "samples", width: 3000, height: 2000 }, function(
+		result
+	) {
+		console.log(result);
+		return result;
+	});
+};
+
+router.post("/upload", parser.single("image"), (req, res) => {
+	console.log(req.file);
+	const image = {};
+	if (req.file) {
+		console.log("Uploading file...");
+		image.url = req.file.url;
+		image.id = req.file.public_id;
+		var filename = image.url;
+		var uploadStatus = "File Uploaded Successfully";
+	} else {
+		console.log("No File Uploaded");
+		var filename = "FILE NOT UPLOADED";
+		var uploadStatus = "File Upload Failed";
+	}
+
+	/* ===== Add the function to save filename to database ===== */
+
+	return res.send({ status: uploadStatus, filename: `Name Of File: ${filename}`, image: image });
+});
+
+router.post("/images", parser.single("image"), function(req, res) {
+	cloudinary.v2.uploader.upload(req.file.path, function(result) {
+		// add cloudinary url for the image to the campground object under image property
+		console.log(result);
+		var image = req.body.image;
+		image = result.secure_url;
+
+		return res.json({ result: result });
+	});
+});
 
 // @desc GET Competitions
 // @route /api/v1/competition
@@ -144,6 +224,11 @@ router.get("/competition/:id", (req, res) => {
  *         description: Successfully created
  */
 router.post("/competition", (req, res) => {
+	const { errors, isValid } = validateCompetitionInput(req.body, req.body.image);
+	// Check Validation
+	if (!isValid) {
+		return res.status(400).json({ errors });
+	}
 	const newComp = {
 		title: req.body.title,
 		image: req.body.image,
@@ -183,6 +268,11 @@ router.post("/competition", (req, res) => {
  *         description: Successfully created
  */
 router.post("/competition/:id", (req, res) => {
+	const { errors, isValid } = validateHeatInput(req.body);
+	// Check Validation
+	if (!isValid) {
+		return res.status(400).json({ errors });
+	}
 	db
 		.collection("competitions")
 		.doc(req.params.id)
@@ -192,7 +282,9 @@ router.post("/competition/:id", (req, res) => {
 				return res.status(404).json({ status: "Competition does not exist", error: error });
 			}
 			const newHeat = {
-				heat_number: req.body.heat_number
+				heat_number: req.body.heat_number,
+				date: req.body.date,
+				time: req.body.time
 			};
 			db
 				.collection("competitions")
@@ -348,6 +440,11 @@ router.get("/competition/:id/heats/:heatID", (req, res) => {
  *         description: Successfully created
  */
 router.post("/competition/:id/heats/:heatID/score", (req, res) => {
+	const { errors, isValid } = validateScoreInput(req.body);
+	// Check Validation
+	if (!isValid) {
+		return res.status(400).json({ errors });
+	}
 	const {
 		first_position,
 		second_position,

@@ -3,4 +3,7 @@ const firebaseConfig = require("./keys").firebaseConfig;
 
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
-module.exports = firebaseApp.firestore();
+const firestore_obj = firebaseApp.firestore();
+const settings = { timestampsInSnapshots: true };
+firestore_obj.settings(settings);
+module.exports = firestore_obj;
