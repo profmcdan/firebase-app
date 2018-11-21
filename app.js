@@ -31,13 +31,7 @@ var options = {
 // initialize swagger-jsdoc
 var swaggerSpec = swaggerJSDoc(options);
 
-// Body Parser Middleware
-app.use(
-	bodyParser.urlencoded({
-		extended: false
-	})
-);
-
+app.use("/uploads", express.static("uploads"));
 app.use(express.static(path.join(__dirname, "public", "api-docs")));
 // Deployment Purpose
 app.use(bodyParser.json());

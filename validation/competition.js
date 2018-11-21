@@ -1,11 +1,11 @@
 const Validator = require("validator");
 const isEmpty = require("./is-empty");
 
-module.exports = function validateCompetitionInput(data, imageUrl) {
+module.exports = function validateCompetitionInput(data) {
 	let errors = {};
 
 	data.title = !isEmpty(data.title) ? data.title : "";
-	let image = !isEmpty(imageUrl) ? imageUrl : "";
+	// let image = !isEmpty(imageUrl) ? imageUrl : "";
 	data.location = !isEmpty(data.location) ? data.location : "";
 	data.start_date = !isEmpty(data.start_date) ? data.start_date : "";
 	data.end_date = !isEmpty(data.end_date) ? data.end_date : "";
@@ -23,13 +23,13 @@ module.exports = function validateCompetitionInput(data, imageUrl) {
 		errors.title = "Title field is required";
 	}
 
-	if (Validator.isEmpty(image)) {
-		errors.image = "image field is required";
-	}
+	// if (Validator.isEmpty(image)) {
+	// 	errors.image = "image field is required";
+	// }
 
-	if (!Validator.isURL(image)) {
-		errors.image = "Image link is invalid";
-	}
+	// if (!Validator.isURL(image)) {
+	// 	errors.image = "Image link is invalid";
+	// }
 
 	if (Validator.isEmpty(data.location)) {
 		errors.location = "Location field is required";

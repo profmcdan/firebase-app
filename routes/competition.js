@@ -13,72 +13,44 @@ const validateCompetitionInput = require("../validation/competition");
 const validateHeatInput = require("../validation/heat");
 const validateScoreInput = require("../validation/scores");
 
-const upload = multer({ dest: "./assets/" });
+// Init Upload
+const storage = multer.diskStorage({
+	destination: function(req, file, cb) {
+		cb(null, "uploads/");
+	},
+	filename: function(req, file, cb) {
+		cb(null, new Date().toISOString() + file.originalname);
+	}
+});
 
-const storage = cloudinaryStorage({
+const fileFilter = (req, file, cb) => {
+	// reject a file
+	if (file.mimetype === "image/jpeg" || file.mimetype === "image/png") {
+		cb(null, true);
+	} else {
+		cb(null, false);
+	}
+};
+
+const cloudStorage = cloudinaryStorage({
 	cloudinary: cloudinary,
 	folder: "dance",
 	allowedFormats: [ "jpg", "png" ],
 	transformation: [ { width: 500, height: 500, crop: "limit" } ]
 });
 
-const parser = multer({ storage: storage });
-
-router.post("/upload2", upload.single("image"), (req, res) => {
-	console.log(req.files.image);
-	if (req.files) {
-		console.log("Uploading file...");
-		var filename = req.files.image.name;
-		var uploadStatus = "File Uploaded Successfully";
-	} else {
-		console.log("No File Uploaded");
-		var filename = "FILE NOT UPLOADED";
-		var uploadStatus = "File Upload Failed";
-	}
-
-	/* ===== Add the function to save filename to database ===== */
-
-	return res.send({ status: uploadStatus, filename: `Name Of File: ${filename}` });
+const upload = multer({
+	storage: cloudStorage,
+	limits: {
+		fileSize: 1024 * 1024 * 5
+	},
+	fileFilter: fileFilter
 });
 
-const uploadImage = (imgPath) => {
-	cloudinary.v2.uploader.upload(imgPath, { crop: "limit", tags: "samples", width: 3000, height: 2000 }, function(
-		result
-	) {
-		console.log(result);
-		return result;
-	});
-};
-
-router.post("/upload", parser.single("image"), (req, res) => {
+router.post("/upload", upload.single("image"), (req, res) => {
+	const image = { image: req.file.url };
 	console.log(req.file);
-	const image = {};
-	if (req.file) {
-		console.log("Uploading file...");
-		image.url = req.file.url;
-		image.id = req.file.public_id;
-		var filename = image.url;
-		var uploadStatus = "File Uploaded Successfully";
-	} else {
-		console.log("No File Uploaded");
-		var filename = "FILE NOT UPLOADED";
-		var uploadStatus = "File Upload Failed";
-	}
-
-	/* ===== Add the function to save filename to database ===== */
-
-	return res.send({ status: uploadStatus, filename: `Name Of File: ${filename}`, image: image });
-});
-
-router.post("/images", parser.single("image"), function(req, res) {
-	cloudinary.v2.uploader.upload(req.file.path, function(result) {
-		// add cloudinary url for the image to the campground object under image property
-		console.log(result);
-		var image = req.body.image;
-		image = result.secure_url;
-
-		return res.json({ result: result });
-	});
+	return res.json({ url: image });
 });
 
 // @desc GET Competitions
@@ -243,15 +215,16 @@ router.get("/competition/:id", (req, res) => {
  *       200:
  *         description: Successfully created
  */
-router.post("/competition", (req, res) => {
-	const { errors, isValid } = validateCompetitionInput(req.body, req.body.image);
+router.post("/competition", upload.single("image"), (req, res) => {
+	const image = req.file.url;
+	const { errors, isValid } = validateCompetitionInput(req.body);
 	// Check Validation
 	if (!isValid) {
 		return res.status(400).json({ errors });
 	}
 	const newComp = {
 		title: req.body.title,
-		image: req.body.image,
+		image: image,
 		location: req.body.location,
 		start_date: req.body.start_date,
 		end_date: req.body.end_date
