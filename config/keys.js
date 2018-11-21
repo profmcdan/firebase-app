@@ -1,6 +1,14 @@
 require("dotenv").config();
 
 const config = {
+	firebaseConfig: {
+		apiKey: "AIzaSyBTgTVUeuz7f6TFj1Hc-BOxTffYf58-EAE",
+		authDomain: "zip-dance.firebaseapp.com",
+		databaseURL: "https://zip-dance.firebaseio.com",
+		projectId: "zip-dance",
+		storageBucket: "zip-dance.appspot.com",
+		messagingSenderId: "356081457910"
+	},
 	firebaseConfig2: {
 		apiKey: process.env.apiKey,
 		authDomain: process.env.authDomain,
