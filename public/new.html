@@ -49,7 +49,7 @@
         <h3>ZipDance Solution!</h3>
         <p class='lead'>New Competition</p>
       <div class='col-md-8'>
-          <form>
+          <form method="POST" enctype="multipart/form-data" action="api/v1/competition"> 
               <div class="form-group">
                 <input type="text" class="form-control" id="titleInput" name="title" aria-describedby="titleHelp" placeholder="Enter Title">
                 <small id="titleHelp" class="form-text text-muted">Enter the title of this competition.</small>
