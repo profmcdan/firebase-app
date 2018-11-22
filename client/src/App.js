@@ -1,24 +1,34 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { Provider } from "react-redux";
+import { Container, Row, Col } from "mdbreact";
+
 import "font-awesome/css/font-awesome.min.css";
 import "bootstrap-css-only/css/bootstrap.min.css";
 import "mdbreact/dist/css/mdb.css";
+import "./App.css";
+
+import NavbarPage from "./components/Home/NavbarPage";
+import FooterPage from "./components/Home/FooterPage";
+import Landing from "./components/Home/Landing";
+import NewCompetition from "./components/Forms/NewCompetition";
+import AddHeat from "./components/Forms/AddHeat";
 
 class App extends Component {
 	render() {
 		return (
-			<div className="App">
-				<header className="App-header">
-					<img src={logo} className="App-logo" alt="logo" />
-					<p>
-						Edit <code>src/App.js</code> and save to reload.
-					</p>
-					<a className="App-link" href="https://reactjs.org" target="_blank" rel="noopener noreferrer">
-						Learn React
-					</a>
-				</header>
-			</div>
+			<Router>
+				<div className="container-fluid">
+					<NavbarPage />
+					<Route exact path="/" component={Landing} />
+					<Container>
+						<Route exact path="/new" component={NewCompetition} />
+						<Route exact path="/add-heat" component={AddHeat} />
+					</Container>
+					<Container />
+					<FooterPage />
+				</div>
+			</Router>
 		);
 	}
 }

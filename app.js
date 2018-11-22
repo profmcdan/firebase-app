@@ -79,8 +79,12 @@ app.get("/scores", (req, res) => {
 	res.sendFile(path.join(__dirname, "public", "scores.html"));
 });
 
-app.get("*", (req, res) => {
+app.get("/", (req, res) => {
 	res.sendFile(path.join(__dirname, "public", "api-docs", "index.html"));
+});
+
+app.get("*", (req, res) => {
+	return res.status(404).json({ error: "Invalid Route" });
 });
 
 const port = process.env.PORT || 5000;

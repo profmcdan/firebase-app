@@ -23,7 +23,7 @@ class NavbarPage extends React.Component {
 
 	render() {
 		return (
-			<Navbar color="default-color" dark expand="md" style={{ marginTop: "20px" }}>
+			<Navbar color="blue" dark expand="md" style={{ marginTop: "0px" }}>
 				<NavbarBrand>
 					<strong className="white-text">ZipDance</strong>
 				</NavbarBrand>
