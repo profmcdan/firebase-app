@@ -581,7 +581,7 @@ router.post("/competition/:id/heats/:heatID/score", (req, res) => {
  *       200:
  *         description: A score in a heat for a given user in a Competition
  *         schema:
- *           $ref: '#/definitions/Heat'
+ *           $ref: '#/definitions/Score'
  */
 router.get("/competition/:id/heats/:heatID/score/:user", (req, res) => {
 	const { id, heatID, user } = req.params;
@@ -616,37 +616,52 @@ router.get("/competition/:id/heats/:heatID/score/:user", (req, res) => {
 		});
 });
 
-// Check if user has voted
-const hasUserVoted = (id, heatID, user) => {
-	const query = [];
-	console.log("I got here - 2");
-	db
-		.collection("competitions")
-		.doc(id)
-		.collection("heats")
-		.doc(heatID)
-		.collection("scores")
-		.where("user", "==", user)
-		.get()
-		.then((doc) => {
-			if (!doc) {
-				console.log("im here false");
-				return { status: "false" };
-			}
-			doc.forEach((score) => {
-				var cData = score.data();
-				cData.id = score.id;
-				cData.competition = id;
-				cData.heat = heatID;
-				query.push(cData);
-			});
-			if (query.length > 0) {
-				return { status: "true" };
-			}
-			return { status: "false" };
-		})
-		.catch((err) => {
-			return { errors: err };
-		});
-};
+/**
+ * @swagger
+ * /api/v1/competition/{id}/heats/{heatId}/score:
+ *   get:
+ *     tags:
+ *       - Score
+ *     description: Returns a Judges and zipDancer's score for a in a heat.
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - name: id
+ *         description: Competition's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *       - name: heatID
+ *         description: Heat's id
+ *         in: path
+ *         required: true
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: A score in a heat for in a Competition
+ *         schema:
+ *           $ref: '#/definitions/Score'
+ */
+router.get("/competition/:id/heats/:heatID/score", (req, res) => {
+	const { id, heatID } = req.params;
+	const judgeRating = {
+		first_position: "001",
+		second_position: "230",
+		third_position: "102",
+		fourth_position: "122",
+		fifth_position: "422",
+		sixth_position: "100"
+	};
+	const dancersRating = {
+		first_position: "230",
+		second_position: "230",
+		third_position: "001",
+		fourth_position: "122",
+		fifth_position: "100",
+		sixth_position: "422"
+	};
+
+	return res.json({ comeptition: id, heat: heatID, judgeRating, dancersRating });
+});
+
 module.exports = router;
