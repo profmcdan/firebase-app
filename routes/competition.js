@@ -618,7 +618,7 @@ router.get("/competition/:id/heats/:heatID/score/:user", (req, res) => {
 
 /**
  * @swagger
- * /api/v1/competition/{id}/heats/{heatId}/score:
+ * /api/v1/competition/{id}/heats/{heatID}/score:
  *   get:
  *     tags:
  *       - Score
