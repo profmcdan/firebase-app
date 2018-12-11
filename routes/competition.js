@@ -435,9 +435,9 @@ router.get("/competition/:id/heats/:heatID", (req, res) => {
 router.post("/competition/:id/heats/:heatID/score", (req, res) => {
 	const { errors, isValid } = validateScoreInput(req.body);
 	// Check Validation
-	if (!isValid) {
-		return res.status(400).json({ errors });
-	}
+	// if (!isValid) {
+	// 	return res.status(400).json({ errors });
+	// }
 	const {
 		first_position,
 		second_position,

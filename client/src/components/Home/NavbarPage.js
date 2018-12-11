@@ -15,15 +15,18 @@ import {
 } from "mdbreact";
 
 class NavbarPage extends React.Component {
-	state = {
-		isOpen: false
-	};
+	constructor(props){
+		super(props);
+		this.state = {
+			isOpen: false
+		};
+	}
 
-	toggleCollapse = this.setState({ isOpen: !this.state.isOpen });
+	toggleCollapse = () =>{ this.setState({ isOpen: !this.state.isOpen }); }
 
 	render() {
 		return (
-			<Navbar color="blue" dark expand="md" style={{ marginTop: "0px" }}>
+			<Navbar className="mb-3" color="blue" dark expand="md" style={{ marginTop: "0px" }}>
 				<NavbarBrand>
 					<strong className="white-text">ZipDance</strong>
 				</NavbarBrand>
@@ -31,10 +34,10 @@ class NavbarPage extends React.Component {
 				<Collapse id="navbarCollapse3" isOpen={this.state.isOpen} navbar>
 					<NavbarNav left>
 						<NavItem active>
-							<NavLink to="#!">Home</NavLink>
+							<NavLink to="/">Home</NavLink>
 						</NavItem>
 						<NavItem>
-							<NavLink to="#!">Competition</NavLink>
+							<NavLink to="/competition">Competition</NavLink>
 						</NavItem>
 						<NavItem>
 							<Dropdown>
@@ -42,7 +45,7 @@ class NavbarPage extends React.Component {
 									<div className="d-none d-md-inline">Admin</div>
 								</DropdownToggle>
 								<DropdownMenu className="dropdown-default" right>
-									<DropdownItem href="#!">New Competition</DropdownItem>
+									<DropdownItem href="/new">New Competition</DropdownItem>
 									<DropdownItem href="#!">Manage Heat</DropdownItem>
 									<DropdownItem href="#!">Scores</DropdownItem>
 								</DropdownMenu>
